@@ -1,0 +1,25 @@
+{
+  "name": "ingest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^22.15.3",
+    "axios": "^1.9.0",
+    "better-sqlite3": "^11.9.1",
+    "chromadb": "^2.3.0",
+    "dotenv": "^16.5.0",
+    "openai": "^4.96.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13"
+  }
+}
