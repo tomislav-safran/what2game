@@ -1,10 +1,7 @@
-import {ChromaClient, IncludeEnum} from "chromadb";
-import {OpenAI} from "openai";
 import GameItem from "@/app/ui/GameItem";
 
-
 export default async function GameGrid({ query }: { query: string }) {
-    let games = [];
+    let games: Game[] = [];
     if (query) {
         games = await handleSearch(query) || [];
     }
@@ -18,28 +15,40 @@ export default async function GameGrid({ query }: { query: string }) {
     )
 }
 
-async function handleSearch(query: string) {
-    let games: any[] = [];
+async function handleSearch(query: string): Promise<Game[]> {
+    if (!query) return [];
 
-    if (query) {
-        const chroma = new ChromaClient({ path: process.env.CHROMA_URL || 'http://localhost:8000' });
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-        const embeddingRes = await openai.embeddings.create({
-            model: 'text-embedding-3-small',
-            input: query,
+    try {
+        const res = await fetch(`http://localhost:4000/search?query=${encodeURIComponent(query)}`, {
+            next: { revalidate: 60 },
         });
 
-        const embedding = embeddingRes.data[0].embedding;
+        if (!res.ok) {
+            console.error("Failed to fetch games", res.status);
+            return [];
+        }
 
-        const collection = await chroma.getOrCreateCollection({ name: 'games' });
-        const results = await collection.query({
-            queryEmbeddings: [embedding],
-            nResults: 6,
-            include: [IncludeEnum.Metadatas],
-        });
+        const data = await res.json();
 
-        games = results.metadatas[0] || [];
-        return games;
+        if (!Array.isArray(data)) {
+            console.error("Invalid data format from backend");
+            return [];
+        }
+
+        return data as Game[];
+    } catch (error) {
+        console.error("Error fetching games:", error);
+        return [];
     }
+}
+
+export interface Game {
+    appId: number;
+    name: string;
+    genres: string;
+    categories: string;
+    developers: string;
+    publishers: string;
+    price: string;
+    isFree: number;
 }

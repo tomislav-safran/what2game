@@ -3,14 +3,24 @@ services:
     image: chromadb/chroma
     volumes:
       - chroma_data:/data
-    ports:
-      - "8000:8000"
 
   ingest:
     build:
       context: ./packages/ingest
     volumes:
       - ./data:/app/data
+    env_file:
+      - .env
+    depends_on:
+      - chroma
+    profiles:
+      - ingest
+
+  api:
+    build:
+      context: ./packages/chromadb-api
+    ports:
+      - "4000:4000"
     env_file:
       - .env
     depends_on:
