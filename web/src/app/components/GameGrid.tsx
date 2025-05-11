@@ -1,4 +1,8 @@
 import GameItem from "@/app/ui/GameItem";
+import dotenv from 'dotenv';
+dotenv.config();
+
+const chromaApiRoot = process.env.CHROMA_API_ROOT_PATH;
 
 export default async function GameGrid({ query }: { query: string }) {
     let games: Game[] = [];
@@ -19,7 +23,7 @@ async function handleSearch(query: string): Promise<Game[]> {
     if (!query) return [];
 
     try {
-        const res = await fetch(`http://localhost:4000/search?query=${encodeURIComponent(query)}`, {
+        const res = await fetch(`${chromaApiRoot}/search?query=${encodeURIComponent(query)}`, {
             next: { revalidate: 60 },
         });
 

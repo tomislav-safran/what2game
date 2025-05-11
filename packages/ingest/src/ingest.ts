@@ -43,7 +43,7 @@ async function ingestGames() {
             console.error(`Failed inserting: ${game.name}`, error);
         }
     }
-
+    console.log('All games inserted.')
     db.close();
 }
 
