@@ -15,34 +15,45 @@ const db = new Database(dbPath);
 async function ingestGames() {
     const collection = await chroma.getOrCreateCollection({name: 'games'})
 
-    const games = db.prepare(`SELECT appid, name, genres, categories, shortDesc, aboutTheGame, developers, publishers, price, isFree FROM Game WHERE type = 'game'`).all() as Game[];
+    const batchSize = 200;
+    const { count: total } = db.prepare(`SELECT COUNT(*) as count FROM Game WHERE type = 'game'`).get() as { count: number };
 
-    for (const game of games) {
-        try {
-            const gameText = buildGameDetailsString(game);
-            const embedding = await getEmbedding(gameText);
+    for (let offset = 0; offset < total; offset += batchSize) {
+        const games = db.prepare(`
+            SELECT appid, name, genres, categories, shortDesc, aboutTheGame, developers, publishers, price, isFree
+            FROM Game
+            WHERE type = 'game'
+            LIMIT ? OFFSET ?
+        `).all(batchSize, offset) as Game[];
 
-            await collection.add({
-                ids: [game.appid.toString()],
-                documents: [gameText],
-                embeddings: [embedding],
-                metadatas: [{
-                    appId: game.appid,
-                    name: game.name || '',
-                    genres: game.genres || '',
-                    categories: game.categories || '',
-                    developers: game.developers || '',
-                    publishers: game.publishers || '',
-                    price: game.price || 0,
-                    isFree: game.isFree,
-                }]
-            });
+        for (const game of games) {
+            try {
+                const gameText = buildGameDetailsString(game);
+                const embedding = await getEmbedding(gameText);
 
-            console.log(`Inserted: ${game.name}`);
-        } catch (error) {
-            console.error(`Failed inserting: ${game.name}`, error);
+                await collection.add({
+                    ids: [game.appid.toString()],
+                    documents: [gameText],
+                    embeddings: [embedding],
+                    metadatas: [{
+                        appId: game.appid,
+                        name: game.name || '',
+                        genres: game.genres || '',
+                        categories: game.categories || '',
+                        developers: game.developers || '',
+                        publishers: game.publishers || '',
+                        price: game.price || 0,
+                        isFree: game.isFree,
+                    }]
+                });
+
+                console.log(`Inserted: ${game.name}`);
+            } catch (error) {
+                console.error(`Failed inserting: ${game.name}`, error);
+            }
         }
     }
+
     console.log('All games inserted.')
     db.close();
 }
