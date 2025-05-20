@@ -1,7 +1,9 @@
-import Search from "@/app/ui/search";
+import Search from "@/app/ui/Search";
 import {Suspense} from "react";
 import GameGrid from "@/app/components/GameGrid";
 import GameGridSkeleton from "@/app/components/GameGridSkeleton";
+import LoadMore from "@/app/ui/LoadMore";
+import GameGridAnimatedWrapper from "@/app/components/GameGridAnimatedWrapper";
 
 export default async function Home(props: {
     searchParams?: Promise<{
@@ -12,6 +14,7 @@ export default async function Home(props: {
 
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
+    const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
 
     return (
         <div
@@ -20,11 +23,12 @@ export default async function Home(props: {
             <div className="flex w-full justify-center items-center gap-2 mb-8">
                 <Search placeholder="Search games..."/>
             </div>
-            <div className={`h-[168px] ${query ? 'animate-grow' : 'animate-shrink'} max-w-[800px] w-full`}>
-                <Suspense key={query} fallback={<GameGridSkeleton/>}>
-                    <GameGrid query={query}/>
+            <GameGridAnimatedWrapper query={query} page={page}>
+                <Suspense key={`${query}-${page}`} fallback={<GameGridSkeleton page={page}/>}>
+                    <GameGrid query={query} page={page}/>
                 </Suspense>
-            </div>
+                <LoadMore/>
+            </GameGridAnimatedWrapper>
         </div>
     );
 }

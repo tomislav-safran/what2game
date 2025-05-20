@@ -9,6 +9,8 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
+const pageSize = 6;
+
 app.use(cors());
 
 const openai = new OpenAI({
@@ -19,6 +21,8 @@ const chroma = new ChromaClient({ path: process.env.CHROMA_URL || 'http://localh
 
 app.get('/search', async (req: express.Request, res: express.Response): Promise<any> => {
     const query = req.query.query as string;
+    const page = parseInt(req.query.page as string) || 1;
+
     if (!query) return res.status(400).json({ error: 'Query is required' });
 
     try {
@@ -32,7 +36,7 @@ app.get('/search', async (req: express.Request, res: express.Response): Promise<
         const collection = await chroma.getOrCreateCollection({ name: 'games' });
         const results = await collection.query({
             queryEmbeddings: [embedding],
-            nResults: 6,
+            nResults: pageSize * page,
             include: [IncludeEnum.Metadatas],
         });
 

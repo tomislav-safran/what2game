@@ -1,6 +1,6 @@
 'use client';
 
-export default function GameGrid({game, loading}: {
+export default function GameItem({game, loading}: {
     game?: { appId: number, name: string, genres: string },
     loading?: boolean
 }) {
@@ -18,10 +18,10 @@ export default function GameGrid({game, loading}: {
             href={`https://store.steampowered.com/app/${game?.appId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-4 max-w-[280px] min-h-[76px] bg-gray-700 rounded shadow animate-grow-card block hover:bg-gray-600 transition overflow-hidden"
+            className="p-4 w-full min-h-[76px] max-h-[76px] bg-gray-700 rounded shadow block hover:bg-gray-600 transition overflow-hidden"
         >
             <h2 className="font-bold">{game?.name}</h2>
-            <p className="text-sm text-gray-400">{game?.genres}</p>
+            <p className="text-sm text-gray-400 whitespace-nowrap overflow-hidden text-ellipsis">{game?.genres}</p>
         </a>
     );
 }

@@ -4,10 +4,10 @@ dotenv.config();
 
 const chromaApiRoot = process.env.CHROMA_API_ROOT_PATH;
 
-export default async function GameGrid({ query }: { query: string }) {
+export default async function GameGrid({ query, page }: { query: string, page: number }) {
     let games: Game[] = [];
     if (query) {
-        games = await handleSearch(query) || [];
+        games = await handleSearch(query, page) || [];
     }
 
     return (
@@ -19,12 +19,13 @@ export default async function GameGrid({ query }: { query: string }) {
     )
 }
 
-async function handleSearch(query: string): Promise<Game[]> {
+async function handleSearch(query: string, page: number): Promise<Game[]> {
+    console.log(`[handleSearch] query: ${query}, page: ${page}`);
     if (!query) return [];
 
     try {
-        const res = await fetch(`${chromaApiRoot}/search?query=${encodeURIComponent(query)}`, {
-            next: { revalidate: 60 },
+        const res = await fetch(`${chromaApiRoot}/search?query=${encodeURIComponent(query)}&page=${page}`, {
+            cache: 'no-store',
         });
 
         if (!res.ok) {
