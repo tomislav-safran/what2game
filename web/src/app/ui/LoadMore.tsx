@@ -21,9 +21,10 @@ export default function LoadMore() {
     };
 
     return (
-        <div className="relative w-full max-w-xl">
+        <div className="w-full flex justify-center mt-6">
             <button
                 onClick={handleClick}
+                className={"px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg shadow active:scale-95"}
             >
                 Load more
             </button>

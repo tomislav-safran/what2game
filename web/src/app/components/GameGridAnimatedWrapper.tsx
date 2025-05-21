@@ -3,7 +3,7 @@
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
-export default function GameGridAnimatedWrapper({children, query, page,}: {
+export default function GameGridAnimatedWrapper({children, query}: {
     children: ReactNode;
     query: string;
     page: number;
