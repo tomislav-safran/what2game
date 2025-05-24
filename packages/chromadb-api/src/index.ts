@@ -38,6 +38,9 @@ app.get('/search', async (req: express.Request, res: express.Response): Promise<
             queryEmbeddings: [embedding],
             nResults: pageSize * page,
             include: [IncludeEnum.Metadatas],
+            where: {
+                reviewCount: { "$gt": 100 }
+            }
         });
 
         const games = results.metadatas[0] || [];

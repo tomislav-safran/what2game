@@ -20,7 +20,7 @@ async function ingestGames() {
 
     for (let offset = 0; offset < total; offset += batchSize) {
         const games = db.prepare(`
-            SELECT appid, name, genres, categories, shortDesc, aboutTheGame, developers, publishers, price, isFree
+            SELECT appid, name, genres, categories, shortDesc, aboutTheGame, developers, publishers, price, isFree, reviewScore, reviewCount
             FROM Game
             WHERE type = 'game'
             LIMIT ? OFFSET ?
@@ -42,8 +42,9 @@ async function ingestGames() {
                         categories: game.categories || '',
                         developers: game.developers || '',
                         publishers: game.publishers || '',
-                        price: game.price || 0,
                         isFree: game.isFree,
+                        reviewCount: game.reviewCount || 0,
+                        reviewScore: game.reviewScore || 0,
                     }]
                 });
 
@@ -96,4 +97,6 @@ interface Game {
     metacriticScore: string;
     isFree: boolean;
     releaseDate: string;
+    reviewCount: number;
+    reviewScore: number;
 }
