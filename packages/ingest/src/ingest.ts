@@ -22,7 +22,7 @@ async function ingestGames() {
         const games = db.prepare(`
             SELECT appid, name, genres, categories, shortDesc, aboutTheGame, developers, publishers, price, isFree, reviewScore, reviewCount
             FROM Game
-            WHERE type = 'game'
+            WHERE type = 'game' AND reviewCount >= 10
             LIMIT ? OFFSET ?
         `).all(batchSize, offset) as Game[];
 
