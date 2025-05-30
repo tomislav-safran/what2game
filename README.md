@@ -1,7 +1,8 @@
 # What2Game - Steam Game Search Engine
 
 A similarity search engine for the Steam game database. Uses a vector database (ChromaDB) to store game data and provide relevant search results.
-[What2Game]((https://what2game.tomislavsafran.com/))
+
+https://what2game.tomislavsafran.com/
 
 ## Project Structure
 
