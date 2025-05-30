@@ -56,4 +56,6 @@ export interface Game {
     publishers: string;
     price: string;
     isFree: number;
+    reviewScore: number;
+    reviewCount: number;
 }
