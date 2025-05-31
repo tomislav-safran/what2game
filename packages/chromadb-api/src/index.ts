@@ -12,6 +12,7 @@ const port = process.env.PORT || 4000;
 const pageSize = 6;
 
 app.use(cors());
+app.use(express.json());
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
