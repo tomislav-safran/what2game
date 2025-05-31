@@ -32,7 +32,7 @@ app.get('/search', async (req: express.Request, res: express.Response): Promise<
         });
         const embedding = embeddingRes.data[0].embedding;
 
-        res.json(getChromaResult(embedding, page));
+        res.json(await getChromaResult(embedding, page));
     } catch (error: any) {
         console.error('Error:', error);
         res.status(500).json({error: 'Failed to perform search'});
@@ -47,7 +47,7 @@ app.post('/search', async (req: express.Request, res: express.Response): Promise
     }
 
     try {
-        res.json(getChromaResult(embedding, page));
+        res.json(await getChromaResult(embedding, page));
     } catch (error: any) {
         console.error('Error:', error);
         res.status(500).json({error: 'Failed to perform search'});
