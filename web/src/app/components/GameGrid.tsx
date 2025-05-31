@@ -1,10 +1,11 @@
 import GameItem from "@/app/ui/GameItem";
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const chromaApiRoot = process.env.CHROMA_API_ROOT_PATH;
 
-export default async function GameGrid({ query, page }: { query: string, page: number }) {
+export default async function GameGrid({query, page}: { query: string, page: number }) {
     let games: Game[] = [];
     if (query) {
         games = await handleSearch(query, page) || [];
@@ -13,14 +14,13 @@ export default async function GameGrid({ query, page }: { query: string, page: n
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {games.map((game, idx) => (
-                <GameItem key={idx} game={game} />
+                <GameItem key={idx} game={game}/>
             ))}
         </div>
     )
 }
 
 async function handleSearch(query: string, page: number): Promise<Game[]> {
-    console.log(`[handleSearch] query: ${query}, page: ${page}`);
     if (!query) return [];
 
     try {
@@ -48,14 +48,17 @@ async function handleSearch(query: string, page: number): Promise<Game[]> {
 }
 
 export interface Game {
-    appId: number;
-    name: string;
-    genres: string;
-    categories: string;
-    developers: string;
-    publishers: string;
-    price: string;
-    isFree: number;
-    reviewScore: number;
-    reviewCount: number;
+    metadata: {
+        appId: number;
+        name: string;
+        genres: string;
+        categories: string;
+        developers: string;
+        publishers: string;
+        price: string;
+        isFree: number;
+        reviewScore: number;
+        reviewCount: number;
+    };
+    embedding: number[];
 }
