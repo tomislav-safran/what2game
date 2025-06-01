@@ -10,4 +10,4 @@ This project is a monorepo consisting of multiple packages:
 - **Database (ChromaDB)**: Vector database used for storing vectorized game data.
 - **Vectorization**: Code responsible for processing and vectorizing game data using OpenAi vector embedding model.
 - **Backend (Node.js + Express)**: Handles the API for game data and search logic.
-- **Frontend (Next.js)**: Provides the user interface for browsing and discovering games.
+- **Frontend (Next.js + Tailwind CSS)**: Provides the user interface for browsing and discovering games.
