@@ -4,6 +4,8 @@ A similarity search engine for the Steam game database. Uses a vector database (
 
 https://what2game.tomislavsafran.com/
 
+![what2game](https://github.com/user-attachments/assets/c8c01b47-5c18-4924-87ed-4939b9f9c567)
+
 ## Project Structure
 
 This project is a monorepo consisting of multiple packages:
